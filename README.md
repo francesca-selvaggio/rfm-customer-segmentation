@@ -123,29 +123,16 @@ Large group with mixed value. Prioritise reactivation only for those with M\_sco
 
 \---
 
-#### \## Repository Structure
-
-```
-
+#### ## Repository Structure
 rfm-customer-segmentation/
-
 ├── README.md
-
 ├── data/
-
-│   └── rfm\_results.csv          # Final scored and segmented customer data
-
+│   └── rfm_results.csv          # Final scored and segmented customer data
 ├── sql/
-
-│   └── rfm\_analysis.sql         # Full SQL query: cleaning → scoring → segmentation
-
+│   └── rfm_analysis.sql         # Full SQL query: cleaning → scoring → segmentation
 └── powerbi/
-
-&#x20;   ├── rfm\_dashboard.pbix        # Interactive Power BI dashboard
-
-&#x20;   └── dashboard\_preview.png     # Static preview image
-
-```
+├── rfm_dashboard.pbix        # Interactive Power BI dashboard
+└── dashboard_preview.png     # Static preview image
 
 \---
 
