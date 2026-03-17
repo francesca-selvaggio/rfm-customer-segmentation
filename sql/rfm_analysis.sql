@@ -1,22 +1,8 @@
--- ============================================================
--- RFM Customer Segmentation Analysis
--- Dataset: Online Retail II (UCI Machine Learning Repository)
--- Tool: SQLite / DB Browser for SQLite
--- Author: [Your Name]
--- Date: 2025
--- ============================================================
-
-
--- ============================================================
 -- STEP 1: DATA EXPLORATION
--- Understand the raw dataset before cleaning
--- ============================================================
 
--- Total rows in raw dataset
 SELECT COUNT(*) AS total_rows
 FROM retail;
-
--- Check for nulls and anomalies
+-- null check
 SELECT
     COUNT(*) AS total_rows,
     COUNT("Customer ID") AS rows_with_customer_id,
@@ -26,23 +12,16 @@ SELECT
 FROM retail;
 
 -- Date range of transactions
+
 SELECT
     MIN(InvoiceDate) AS first_transaction,
     MAX(InvoiceDate) AS last_transaction
 FROM retail;
 
 
--- ============================================================
 -- STEP 2: DATA CLEANING
--- Filter out returns, adjustments, and anonymous transactions
--- ============================================================
+-- Valid transactions only: quantity, price > 0 - Customer ID not null
 
--- Valid transactions only:
--- - Quantity > 0 (exclude returns)
--- - Price > 0 (exclude adjustments)
--- - Customer ID not null (exclude anonymous)
-
--- Preview cleaned dataset
 SELECT COUNT(*) AS valid_rows
 FROM retail
 WHERE
@@ -51,28 +30,22 @@ WHERE
     AND "Customer ID" IS NOT NULL;
 
 
--- ============================================================
 -- STEP 3: RFM METRICS CALCULATION
 -- Reference date: 2011-12-10 (day after last transaction)
--- ============================================================
 
--- RFM base metrics per customer
 CREATE VIEW IF NOT EXISTS rfm_base AS
 SELECT
     "Customer ID"                                           AS customer_id,
-    CAST(
-        JULIANDAY('2011-12-10') - JULIANDAY(MAX(InvoiceDate))
-    AS INTEGER)                                             AS recency_days,
+    CAST(JULIANDAY('2011-12-10') - JULIANDAY(MAX(InvoiceDate)) AS INTEGER)                                            
+    AS recency_days,
     COUNT(DISTINCT Invoice)                                 AS frequency,
     ROUND(SUM(Quantity * Price), 2)                         AS monetary
 FROM retail
-WHERE
-    Quantity > 0
+WHERE Quantity > 0
     AND Price > 0
     AND "Customer ID" IS NOT NULL
 GROUP BY "Customer ID";
 
--- Verify: check distribution of key metrics
 SELECT
     MIN(recency_days)   AS min_recency,
     MAX(recency_days)   AS max_recency,
@@ -86,31 +59,23 @@ SELECT
 FROM rfm_base;
 
 
--- ============================================================
 -- STEP 4: RFM SCORING (1–5)
--- Quartile-based scoring using NTILE(4)
--- R: lower recency = better → score reversed
--- F, M: higher = better → score as-is
--- ============================================================
 
 CREATE VIEW IF NOT EXISTS rfm_scored AS
-WITH quartiles AS (
-    SELECT
-        customer_id,
-        recency_days,
-        frequency,
-        monetary,
-        NTILE(4) OVER (ORDER BY recency_days DESC) AS r_quartile,
-        NTILE(4) OVER (ORDER BY frequency ASC)     AS f_quartile,
-        NTILE(4) OVER (ORDER BY monetary ASC)      AS m_quartile
-    FROM rfm_base
-)
+WITH quartiles AS (SELECT
+                        customer_id,
+                        recency_days,
+                        frequency,
+                        monetary,
+                        NTILE(4) OVER (ORDER BY recency_days DESC) AS r_quartile,
+                        NTILE(4) OVER (ORDER BY frequency ASC)     AS f_quartile,
+                        NTILE(4) OVER (ORDER BY monetary ASC)      AS m_quartile
+    FROM rfm_base)
 SELECT
     customer_id,
     recency_days,
     frequency,
     monetary,
-
     -- R score: recency ascending (lower days = more recent = better)
     CASE
         WHEN r_quartile = 1 THEN 5
@@ -118,7 +83,6 @@ SELECT
         WHEN r_quartile = 3 THEN 3
         ELSE 2
     END AS R_score,
-
     -- F score: frequency descending (more invoices = better)
     CASE
         WHEN f_quartile = 4 THEN 5
@@ -126,7 +90,6 @@ SELECT
         WHEN f_quartile = 2 THEN 3
         ELSE 2
     END AS F_score,
-
     -- M score: monetary descending (higher spend = better)
     CASE
         WHEN m_quartile = 4 THEN 5
@@ -134,19 +97,10 @@ SELECT
         WHEN m_quartile = 2 THEN 3
         ELSE 2
     END AS M_score
-
 FROM quartiles;
 
--- Scoring thresholds derived from actual data distribution:
--- R: ≤26 days = 5 | ≤96 = 4 | ≤380 = 3 | ≤500 = 2 | >500 = 1
--- F: ≥7 invoices = 5 | ≥3 = 4 | ≥2 = 3 | ≥1 = 2 | <1 = 1
--- M: ≥£2308 = 5 | ≥£899 = 4 | ≥£349 = 3 | ≥£100 = 2 | <£100 = 1
 
-
--- ============================================================
 -- STEP 5: CUSTOMER SEGMENTATION
--- Segments assigned based on RFM score combinations
--- ============================================================
 
 CREATE VIEW IF NOT EXISTS rfm_segments AS
 SELECT
@@ -158,42 +112,27 @@ SELECT
     F_score,
     M_score,
     (R_score + F_score + M_score) AS RFM_total,
-
     CASE
-        -- VIP: recent, frequent, high-spend
         WHEN R_score >= 4 AND F_score >= 4 AND M_score >= 4
              AND (R_score + F_score + M_score) >= 14
              THEN 'VIP'
-
-        -- Loyal: consistently good across all dimensions
         WHEN R_score >= 3 AND F_score >= 3 AND M_score >= 3
              THEN 'Loyal'
-
-        -- New Customer: recent but limited purchase history
         WHEN R_score >= 4 AND F_score < 3
              THEN 'New Customer'
-
-        -- At Risk: previously engaged, now going inactive
         WHEN R_score < 3 AND F_score >= 4
              THEN 'At Risk'
-
-        -- Dormant: low engagement across all dimensions
         ELSE 'Dormant'
     END AS Segment
-
 FROM rfm_scored;
 
 
--- ============================================================
 -- STEP 6: RESULTS & VALIDATION
--- ============================================================
-
--- Final output: all customers with RFM scores and segment
 SELECT *
 FROM rfm_segments
 ORDER BY RFM_total DESC, monetary DESC;
 
--- Segment summary: count and % of customer base
+-- Segment summary
 SELECT
     Segment,
     COUNT(*)                                                    AS customers,
