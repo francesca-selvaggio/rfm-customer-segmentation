@@ -9,7 +9,7 @@
 
 ## Dashboard Preview
 
-Built in Power BI Desktop. !\[RFM Dashboard](powerbi/dashboard\_preview.png)
+Built in Power BI Desktop. ![RFM Dashboard](powerbi/dashboard\_preview.png)
 
 
 
