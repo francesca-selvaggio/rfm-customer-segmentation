@@ -115,10 +115,10 @@ Large group with mixed values. Prioritise reactivation only for those with M\_sc
 
 ## Limitations
 
-1. **No product-level data used** — RFM treats all purchases equally, regardless of product category or margin.
-2. **Single-country bias** — The majority of transactions are UK-based; global segmentation would require country-level normalisation.
-3. **Static snapshot** — RFM is a point-in-time analysis. Scores decay over time and require periodic refresh (recommended: monthly).
-4. **NTILE is distribution-sensitive** — Quartile boundaries shift if the dataset composition changes. Thresholds should be recalibrated on new data.
+1. **No product-level data used**: RFM treats all purchases equally, regardless of product category or margin.
+2. **Single-country bias**: the majority of transactions are UK-based; global segmentation would require country-level normalisation.
+3. **Static snapshot**: RFM is a point-in-time analysis. Scores decay over time and require periodic refresh (recommended: monthly).
+4. **NTILE is distribution-sensitive**: Quartile boundaries shift if the dataset composition changes. Thresholds should be recalibrated on new data.
 
 
 
@@ -151,7 +151,7 @@ rfm-customer-segmentation/
 ## 👤 About
 
 Industrial Engineer (MSc, LIUC University) with 3+ years of experience as a Business/Data Analyst across pharma, luxury fashion, and logistics.  
-This project is part of a portfolio demonstrating SQL, data analysis, data visualizations and business thinking skills.
+This project is part of a portfolio demonstrating SQL, data analysis, data visualizations, and business thinking skills.
 
 Contacts:
 
