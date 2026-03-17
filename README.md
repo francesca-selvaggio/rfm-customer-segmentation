@@ -45,7 +45,7 @@ RFM scores were computed for each customer using a **reference date of 2011-12-1
 |-|-|-|
 |**Recency**|Days since last purchase|`JULIANDAY(ref) - JULIANDAY(MAX(InvoiceDate))`|
 |**Frequency**|Number of distinct invoices|`COUNT(DISTINCT Invoice)`|
-|**Monetary**|Total revenue generated|`SUM(Quantity \* Price)`|
+|**Monetary**|Total revenue generated|`SUM(Quantity * Price)`|
 
 Each metric was scored 1–5 using **quartile-based NTILE(4)** in SQL, yielding real data-driven thresholds rather than arbitrary cutoffs.
 
@@ -90,23 +90,23 @@ Segments were assigned based on RFM score combinations:
 
 ## Business Recommendations
 
-* ### VIP (21%) — Protect and reward
+* ### VIP (21%) - Protect and reward
 
-These customers generate the highest revenue per head. Focus: loyalty programmes, early access, dedicated account management. Risk 	of losing one VIP = disproportionate revenue impact.
+These customers generate the highest revenue per head. Focus: loyalty programmes, early access, dedicated account management. Risk of losing one VIP = disproportionate revenue impact.
 
-* ### Loyal (38%) — The backbone
+* ### Loyal (38%) - The backbone
 
 The largest group. Upsell and cross-sell opportunities. Nurture with personalised communications to prevent migration to Dormant.
 
-* ### At Risk (5%) — Act fast
+* ### At Risk (5%) - Act fast
 
 High historical frequency, but recently inactive. Targeted win-back campaigns within 30–60 days. A/B test discount vs. content-led re-engagement.
 
-* ### New Customer (6%) — Convert or lose
+* ### New Customer (6%) - Convert or lose
 
 Recently acquired but low frequency. The first 90 days are critical for habit formation. Focus: onboarding sequences, second-purchase incentives.
 
-* ### Dormant (31%) — Triage
+* ### Dormant (31%) - Triage
 
 Large group with mixed values. Prioritise reactivation only for those with M\_score ≥ 3. Suppressing the rest of the marketing spend reduces CAC and improves list hygiene.
 
