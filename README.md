@@ -15,15 +15,15 @@ Built in Power BI Desktop. !\[RFM Dashboard](powerbi/dashboard\_preview.png)
 
 Shows segment distribution, KPI cards, revenue by segment, and customer map (Recency vs Monetary).
 
-\---
+
 
 ## Goal
 
-Segment an e-commerce customer base using the **RFM framework** (Recency, Frequency, Monetary) to identify high-value customers, detect churn risk, and support data-driven retention strategy.
+Segment an e-commerce customer base using the **RFM framework** (Recency, Frequency, Monetary) to identify high-value customers, detect churn risk, and support a data-driven retention strategy.
 
 This project demonstrates end-to-end analytical thinking: from raw transactional data to actionable business recommendations.
 
-\---
+
 
 ## Data Cleaning
 
@@ -35,7 +35,7 @@ The raw dataset contained 1,067,371 rows. Before analysis, the following filters
 
 **Result:** 805,620 valid rows retained across 5,881 unique customers.
 
-\---
+
 
 ## RFM Methodology
 
@@ -59,7 +59,7 @@ Each metric was scored 1–5 using **quartile-based NTILE(4)** in SQL, yielding 
 |2|≤ 500|≥ 1|≥ 100|
 |1|> 500|< 1|< 100|
 
-\---
+
 
 ## Segmentation Logic
 
@@ -73,7 +73,7 @@ Segments were assigned based on RFM score combinations:
 |**At Risk**|R < 3, F ≥ 4|Previously engaged, now inactive|
 |**Dormant**|All others|Low engagement across dimensions|
 
-\---
+
 
 ## Results
 
@@ -86,7 +86,7 @@ Segments were assigned based on RFM score combinations:
 |At Risk|301|5%|
 |**Total**|**5,881**|**100%**|
 
-\---
+
 
 ## Business Recommendations
 
@@ -104,24 +104,23 @@ High historical frequency, but recently inactive. Targeted win-back campaigns wi
 
 * ### New Customer (6%) — Convert or lose
 
-Recently acquired but low frequency. First 90 days are critical for habit formation. Focus: onboarding sequences, second-purchase incentives.
+Recently acquired but low frequency. The first 90 days are critical for habit formation. Focus: onboarding sequences, second-purchase incentives.
 
 * ### Dormant (31%) — Triage
 
-Large group with mixed value. Prioritise reactivation only for those with M\_score ≥ 3. Suppressing the rest from marketing spend reduces CAC and improves list hygiene.
+Large group with mixed values. Prioritise reactivation only for those with M\_score ≥ 3. Suppressing the rest of the marketing spend reduces CAC and improves list hygiene.
 
 
 
-\---
 
 ## Limitations
 
-1. **No product-level data used** — RFM treats all purchases equally regardless of product category or margin.
+1. **No product-level data used** — RFM treats all purchases equally, regardless of product category or margin.
 2. **Single-country bias** — The majority of transactions are UK-based; global segmentation would require country-level normalisation.
 3. **Static snapshot** — RFM is a point-in-time analysis. Scores decay over time and require periodic refresh (recommended: monthly).
 4. **NTILE is distribution-sensitive** — Quartile boundaries shift if the dataset composition changes. Thresholds should be recalibrated on new data.
 
-\---
+
 
 
 ## Repository Structure
@@ -129,15 +128,15 @@ Large group with mixed value. Prioritise reactivation only for those with M\_sco
 rfm-customer-segmentation/
 ├── README.md
 ├── data/
-│   └── rfm_results.csv          # Final scored and segmented customer data
+│   └── rfm_results.csv           # Final scored and segmented customer data
 ├── sql/
-│   └── rfm_analysis.sql         # Full SQL query: cleaning → scoring → segmentation
+│   └── rfm_analysis.sql          # Full SQL query: cleaning → scoring → segmentation
 └── powerbi/
     ├── rfm_dashboard.pbix        # Interactive Power BI dashboard
     └── dashboard_preview.png     # Static preview image
 ```
 
-\---
+
 
 ## Tools Used
 
@@ -147,7 +146,7 @@ rfm-customer-segmentation/
 
 
 
-\---
+
 
 ## 👤 About
 
