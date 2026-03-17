@@ -1,4 +1,4 @@
-# RFM Customer Segmentation — Online Retail II
+# RFM Customer Segmentation - Online Retail II
 
 **Tools:** SQL (SQLite), Google Sheets, Power BI  
 **Dataset:** [Online Retail II — UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/502/online+retail+ii)  
