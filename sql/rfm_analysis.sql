@@ -12,7 +12,6 @@ SELECT
 FROM retail;
 
 -- Date range of transactions
-
 SELECT
     MIN(InvoiceDate) AS first_transaction,
     MAX(InvoiceDate) AS last_transaction
@@ -25,9 +24,9 @@ FROM retail;
 SELECT COUNT(*) AS valid_rows
 FROM retail
 WHERE
-    Quantity > 0
-    AND Price > 0
-    AND "Customer ID" IS NOT NULL;
+Quantity > 0
+AND Price > 0
+AND "Customer ID" IS NOT NULL;
 
 
 -- STEP 3: RFM METRICS CALCULATION
@@ -42,8 +41,8 @@ SELECT
     ROUND(SUM(Quantity * Price), 2)                         AS monetary
 FROM retail
 WHERE Quantity > 0
-    AND Price > 0
-    AND "Customer ID" IS NOT NULL
+AND Price > 0
+AND "Customer ID" IS NOT NULL
 GROUP BY "Customer ID";
 
 SELECT
@@ -70,7 +69,7 @@ WITH quartiles AS (SELECT
                         NTILE(4) OVER (ORDER BY recency_days DESC) AS r_quartile,
                         NTILE(4) OVER (ORDER BY frequency ASC)     AS f_quartile,
                         NTILE(4) OVER (ORDER BY monetary ASC)      AS m_quartile
-    FROM rfm_base)
+FROM rfm_base)
 SELECT
     customer_id,
     recency_days,
@@ -149,7 +148,7 @@ ORDER BY customers DESC;
 SELECT
     CASE WHEN Segment = 'VIP' THEN 'VIP' ELSE 'Other' END       AS group_label,
     COUNT(*)                                                    AS customers,
-    ROUND(SUM(monetary), 0)                                     AS total_revenue_gbp,
-    ROUND(SUM(monetary) * 100.0 / SUM(SUM(monetary)) OVER (), 1) AS pct_of_revenue
+ROUND(SUM(monetary), 0)                                     AS total_revenue_gbp,
+ROUND(SUM(monetary) * 100.0 / SUM(SUM(monetary)) OVER (), 1) AS pct_of_revenue
 FROM rfm_segments
 GROUP BY group_label;
