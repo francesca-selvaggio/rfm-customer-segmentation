@@ -5,7 +5,7 @@
 **Rows analysed:** 805,620 (after data cleaning)  
 **Customers segmented:** 5,881
 
-\---
+
 
 ## Dashboard Preview
 
